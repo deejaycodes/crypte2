@@ -45,6 +45,9 @@
     "dev": "nodemon app.js",
     "start": "node app.js"
   },
+  "engines": {
+    "node": "14.16.0"
+  },
   "keywords": [
     "bitcoin",
     "cryptocurrency",
