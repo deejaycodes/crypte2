@@ -1,0 +1,62 @@
+<!-- header -->
+<%- include("../../partials/header") %>
+<%- include("../../partials/user_sidebar") %>
+
+<!-- Main Content -->
+<div class="main-content">
+   
+    <section class="section">
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Deposits</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Amount</th>
+                                            <th>Bank</th>
+                                            <th>Account Name</th>
+                                            <th>Account Number</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                        <tr>
+                                            <td>1</td>
+                                            <td>$340.00</td>
+                                            <td>GTB</td>
+                                            <td>John Davids</td>
+                                            <td>20012383838</td>
+                                            <td>Processed</td>
+                                            <td>22/10/2021</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>$33.00</td>
+                                            <td>GTB</td>
+                                            <td>John Davids</td>
+                                            <td>20012383838</td>
+                                            <td>unprocessed</td>
+                                            <td>22/10/2021</td>
+                                        </tr>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<%- include("../../partials/user_footer") %>
