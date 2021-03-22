@@ -9,7 +9,7 @@ module.exports = {
     CLIENT_ID_FB: "803481943564861",
     CLIENT_SECRET_FB: "1021bfb85276588bf79271cb2712f9cc",
     APP_NAME: "bitmint",
-    SITE_URL: "https://bitmint21.herokuapp.com",
+    SITE_URL: "https://bitmint.dephifoodsnetwork.com",
     CLIENT_ID_GOOGLE: "666290590783-djcj0jd6q5g7e00ovciko1elct84qrij.apps.googleusercontent.com",
     CLIENT_SECRET_GOOGLE: "X-aoQVXrMZ-tA3EdRPsCwpBh",
     EMAIL_PASSWORD: "dejideji",
