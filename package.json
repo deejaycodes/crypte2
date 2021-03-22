@@ -1,5 +1,5 @@
 {
-  "name": "cryptedge",
+  "name": "bitmint",
   "version": "1.0.0",
   "description": "cryptocurrency investors and experts\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C\u001b[F\u001b[B\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[",
   "main": "app.js",
@@ -10,6 +10,7 @@
     "coinqvest-merchant-sdk": "0.0.4",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
+    "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
@@ -46,7 +47,7 @@
     "start": "node app.js"
   },
   "engines": {
-    "node": "14.16.0"
+    "node": "14.x"
   },
   "keywords": [
     "bitcoin",
@@ -55,6 +56,6 @@
     "trading",
     "experts"
   ],
-  "author": "Jemifor Godspower",
+  "author": "Deji",
   "license": "ISC"
 }

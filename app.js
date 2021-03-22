@@ -27,9 +27,9 @@ const webRoute = require("./routes/web");
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-let users = [];
-const db = new Sequelize('cryptedge', 'cryptedge_user', '',{
-    host:'localhost',
+let users = []; 
+const db = new Sequelize('heroku_c635cb04fc7edcb', 'b0d31b1d7f56be', '7b612c52@',{
+    host:'lus-cdbr-east-03.cleardb.com',
     dialect:'mysql',
 
 })
@@ -83,7 +83,7 @@ io.on("connection", socket => {
     // socket.broadcast.emit() for every other user except the connected user
     // io.emit(broadcasts to every body);
     console.log(`A user is connected to the socket with socket id of ${socket.id}`);
-    //socket.emit("message", socketHelpers.formatMessage("admin", "Welcome to Cryptedge"));
+    socket.emit("message", socketHelpers.formatMessage("admin", "Welcome to Cryptedge"));
 
     // once a user is connected, save their id,
     socket.on("joined", (id) => {
@@ -91,7 +91,7 @@ io.on("connection", socket => {
         users[id] = socket.id;
         console.log(users);
     });
-
+   
     // broadcasts when a user connects
     //socket.broadcast.emit("message", socketHelpers.formatMessage("admin", "A user is active"));
 
@@ -114,6 +114,10 @@ io.on("connection", socket => {
 
             // send back the messages to myself
             io.to(senderSocketId).emit("my_message", data);
+
+
+            //broadcast to everyone
+            io.sockets.emit('broadcast',{ description: 'Bitcoin prices have gone up'});
 
             // send the message to the receiver
             console.log(`i am sending from ${senderSocketId} to ${receiverSocketId}`);

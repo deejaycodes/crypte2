@@ -5,6 +5,7 @@ const path = require("path");
 
 // local imports
 const BankDeposits = require("../models").BankDeposit;
+const Investment = require('../models').Investment
 const Deposits = require("../models").Deposit;
 const Users = require("../models").User;
 const Chats = require("../models").Chat;
@@ -70,7 +71,7 @@ exports.viewADeposit = (req, res, next) => {
         include: ["user"],
     })
     .then(unansweredChats => {
-        BankDeposits.findOne({
+        Investment.findOne({
             where: {
                 id: {
                     [Op.eq]: id
@@ -121,7 +122,9 @@ exports.unApprovedDeposit = (req, res, next) => {
         include: ["user"],
     })
     .then(unansweredChats => {
-        BankDeposits.findAll({
+        Investment.findAll({
+           
+            
             where: {
                 status: {
                     [Op.eq]: 0
@@ -133,17 +136,20 @@ exports.unApprovedDeposit = (req, res, next) => {
             ],
         })
         .then(bankdeposits => {
+            console.log({bankdeposits});
             res.render("dashboards/bank_deposits", {
                 deposits: bankdeposits,
                 messages: unansweredChats
             });
         })
         .catch(error => {
+            console.log(error)
             req.flash('error', "Server error!");
             res.redirect("/");
         });
     })
     .catch(error => {
+        console.log(error)
         req.flash('error', "Server error!");
         res.redirect("/");
     });
@@ -167,7 +173,7 @@ exports.approvedDeposit = (req, res, next) => {
         include: ["user"],
     })
     .then(unansweredChats => {
-        BankDeposits.findAll({
+        Investment.findAll({
             where: {
                 status: {
                     [Op.eq]: 1
@@ -198,7 +204,7 @@ exports.approvedDeposit = (req, res, next) => {
 exports.approveDeposits = (req, res, next) => {
     id = req.body.id;
     let amount;
-    BankDeposits.findOne({
+    Investment.findOne({
             where: {
                 id: {
                     [Op.eq]: id
@@ -222,7 +228,7 @@ exports.approveDeposits = (req, res, next) => {
                     }
                 })
                 .then(userUpdated => {
-                    BankDeposits.update({
+                    Investment.update({
                         status: 1
                     }, {
                         where: {
@@ -269,7 +275,7 @@ exports.approveDeposits = (req, res, next) => {
 exports.unApproveADeposits = (req, res, next) => {
     id = req.body.id;
     let amount;
-    BankDeposits.findOne({
+    Investment.findOne({
             where: {
                 id: {
                     [Op.eq]: id
@@ -293,7 +299,7 @@ exports.unApproveADeposits = (req, res, next) => {
                     }
                 })
                 .then(userUpdated => {
-                    BankDeposits.update({
+                    Investment.update({
                         status: 0
                     }, {
                         where: {

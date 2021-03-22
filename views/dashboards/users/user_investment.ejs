@@ -23,6 +23,7 @@
                                             <th>Amount</th>
                                             <th>Investment Date</th>
                                             <th>Due Date</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -33,6 +34,12 @@
                                             <td>$<%= investments[i].amount %>.00</td>
                                             <td><%= investments[i].createdAt %></td>
                                             <td><%= investments[i].expiredAt %></td>
+                                            <% if(investments[i].status === 0){ %>
+                                                <td class="badge badge-danger p-1 mt-2">Unapproved</td>
+                                           <% }else{ %>
+                                                <td class='badge badge-secondary p-1 mt-2'>Approved</td>
+                                           <% } %>
+                                          
                                         </tr>
                                         <% } %>
                                     </tbody>

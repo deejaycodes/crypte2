@@ -9,6 +9,7 @@ const Packages = require("../models").Package;
 const Kycs = require("../models").Kyc;
 const Investments = require("../models").Investment;
 const Chats = require("../models").Chat;
+const AdminMessages = require('../models').AdminMessage
 
 // imports initialization
 const Op = Sequelize.Op;
@@ -77,6 +78,7 @@ exports.home = (req, res, next) => {
                                                 paranoid: false,
                                             })
                                             .then(activeInvestments => {
+
                                                 Kycs.findOne({
                                                         where: {
                                                             user_id: {
@@ -90,6 +92,7 @@ exports.home = (req, res, next) => {
                                                                 user: user,
                                                                 kyc: kyc.status,
                                                                 wallet: user.wallet,
+                                                                revenue:user.revenue,
                                                                 referral: referral.length,
                                                                 investment: investment.length,
                                                                 active_investment: activeInvestments.length,
@@ -100,6 +103,7 @@ exports.home = (req, res, next) => {
                                                                 user: user,
                                                                 kyc: 0,
                                                                 wallet: user.wallet,
+                                                                revenue:user.revenue,
                                                                 referral: referral.length,
                                                                 referral_amount: referral.length * 1000,
                                                                 investment: investment.length,

@@ -28,27 +28,25 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        <%  for (let i = 0; i < withdrawals.length; i++ ) { %>
                                         <tr>
-                                            <td>1</td>
-                                            <td>$340.00</td>
-                                            <td>GTB</td>
-                                            <td>John Davids</td>
-                                            <td>20012383838</td>
-                                            <td>Processed</td>
-                                            <td>22/10/2021</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>$33.00</td>
-                                            <td>GTB</td>
-                                            <td>John Davids</td>
-                                            <td>20012383838</td>
-                                            <td>unprocessed</td>
-                                            <td>22/10/2021</td>
+                                            <td><%= i+1 %></td>
+                                            <td><%= withdrawals[i].amount %></td>
+                                            <td><%= withdrawals[i].bank %></td>
+                                            <td><%= withdrawals[i].acc_name%></td>
+                                            <td><%= withdrawals[i].acc_number %></td>
+                                            <% if(withdrawals[i].status === 0){ %>
+                                                <td class="badge badge-danger p-1 mt-2">Unprocessed</td>
+                                            <% }else{ %>
+                                                <td class='badge badge-secondary p-1 mt-2'>Processed</td>
+                                            <% } %>
+                                           
+                                          
+                                            <td><%= withdrawals[i].createdAt %></td>
                                         </tr>
                                         
                                         
+                                        <% } %>
                                     </tbody>
                                 </table>
                             </div>

@@ -5,6 +5,7 @@ const Sequelize = require("sequelize");
 const parameters = require("../config/params");
 const Users = require("../models").User;
 const Chats = require("../models").Chat;
+const AdminMessages = require('../models').AdminMessage
 
 // imports initialization
 const Op = Sequelize.Op;
@@ -117,7 +118,101 @@ exports.chatPage = (req, res, next) => {
         .catch(error => {
             res.redirect("/");
         });
+},
+
+exports.adminMessage = (req,res,next)=>{
+res.render('chatevery')
+},
+
+
+exports.postAdminMessage = (req, res, next) => {
+    const {
+        title,
+        message,
+    } = req.body;
+
+    if (!title) {
+        req.flash('warning', "Please enter name");
+        res.redirect("back");
+    } else if (!message) {
+        req.flash('warning', "Please enter email");
+        res.redirect("back")
+    }
+    Users.findOne({
+            where: {
+                id: {
+                    [Op.eq]: req.session.userId
+                }
+            }
+        })
+        .then((user) => {
+            if (user) {
+                let title = req.body.title;
+                let message = req.body.message;
+                AdminMessages.create({
+                        title: title,
+                        message: message,
+                    
+                    })
+                    .then((response) => {
+                        req.flash('success', "Message sent to all users");
+                        res.redirect("/home");
+                    })
+
+            }
+        })
+        .catch(error => {
+            console.log({ERROR:'something is wrong'})
+            req.flash('error', "Something went wrong try again");
+            res.redirect("back");
+        });
 }
+// exports.chatnow = (req,res,next)=>{
+//     res.render('chatevery')
+// },
+
+
+//ftech all messages by admin
+
+exports.allAdminMessages = (req, res, next) => {
+    AdminMessages.findAll()
+        .then(messages => {
+            Users.findOne({
+                where: {
+                    id: {
+                        [Op.eq]: req.session.userId
+                    }
+                }
+            }).then(user=>{
+                console.log({MESSAGES:messages})
+                let messageCount = messages.length
+                res.render("adminmessages", {
+                    messageCount,
+                    user,
+                    messages: messages
+                });
+            })
+            
+        }).catch(error=>{
+            console.log(error)
+            req.flash('Warning', 'Something went wrong')
+            res.redirect('back')
+        }).catch(error=>{
+            console.log(error)
+            req.flash('Warning', 'Server error, try again')
+            res.redirect('back')
+
+        })
+
+    
+}
+
+
+
+
+
+
+
 
 exports.userChatPage = (req, res, next) => {
     //const id = req.params.id;

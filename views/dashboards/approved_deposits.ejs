@@ -11,7 +11,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Approved Bank Deposits</h4>
+                            <h4>Approved Wallet Deposits</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -19,7 +19,7 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">#</th>
-                                            <th>Image</th>
+                                           
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Amount</th>
@@ -31,7 +31,7 @@
                                         <%  for (let i = 0; i < deposits.length; i++ ) { %>
                                         <tr>
                                             <td><%= i + 1 %></td>
-                                            <td><img alt="image" src="/uploads/<%= deposits[i].image %>" width="35"></td>
+                                           
                                             <td><%= deposits[i].user.name %></td>
                                             <td><%= deposits[i].user.email %></td>
                                             <td>$<%= deposits[i].amount %>.00</td>

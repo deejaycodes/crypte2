@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const moment = require("moment");
+const dayjs = require("dayjs");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         as: "bank_deposits"
       });
 
+      User.hasMany(models.Investment, {
+        foreignKey: "user_id",
+        as: "investments"
+      });
       User.hasMany(models.Chat, {
         foreignKey: "sender_id",
         as: "chats"
@@ -74,6 +78,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.DECIMAL,
     },
+    revenue: {
+      allowNull: true,
+      type: DataTypes.DECIMAL,
+    },
     mining: {
       allowNull: true,
       type: DataTypes.STRING,
@@ -115,7 +123,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.DATE,
       get() {
-        return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss');
+        return dayjs(this.getDataValue('createdAt')).format('MMMM DD YYYY HH:mm:ss');
       }
     }
     

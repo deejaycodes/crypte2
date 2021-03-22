@@ -93,7 +93,7 @@ exports.emailFaPage = (req, res, next) => {
                         let transporter = nodemailer.createTransport({
                             host: parameters.EMAIL_HOST,
                             port: parameters.EMAIL_PORT,
-                            secure: false, // true for 465, false for other ports
+                            secure: true, // true for 465, false for other ports
                             auth: {
                                 user: parameters.EMAIL_USERNAME, // generated ethereal user
                                 pass: parameters.EMAIL_PASSWORD, // generated ethereal password
@@ -314,7 +314,7 @@ exports.postGetLink = (req, res, next) => {
                     let transporter = nodemailer.createTransport({
                         host: parameters.EMAIL_HOST,
                         port: parameters.EMAIL_PORT,
-                        secure: false, // true for 465, false for other ports
+                        secure: true, // true for 465, false for other ports
                         auth: {
                             user: parameters.EMAIL_USERNAME, // generated ethereal user
                             pass: parameters.EMAIL_PASSWORD, // generated ethereal password

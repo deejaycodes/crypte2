@@ -49,9 +49,9 @@
                                 </div>
                             <div class="dropdown-list-content dropdown-list-message">
                                 <%  for (let i = 0; i < messages.length; i++ ) { %>
-                                    <a href="/user_chat" class="dropdown-item"> <span class="dropdown-item-avatar
+                                    <a href="/messages" class="dropdown-item"> <span class="dropdown-item-avatar
                                             text-white"><i class="fa fa-user" style="color: #000; size: 20px;"></i>
-                                        </span> <span class="dropdown-item-desc"> <span class="message-user"><%= messages[i].user.name %></span>
+                                        </span> <span class="dropdown-item-desc"> <span class="message-user"><%= messages[i].title.toUpperCase() %></span>
                                             <span class="time messege-text"><%= messages[i].message %></span>
                                             <span class="time"><%= messages[i].createdAt %></span>
                                         </span>
@@ -80,3 +80,4 @@
                     </li>
                 </ul>
             </nav>
+            

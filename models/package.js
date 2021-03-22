@@ -11,8 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Package.hasMany(models.Investment, { foreignKey: "package_id", as: "investments" });
+
+      Package.hasMany(models.Investment, {
+        foreignKey: "package_id",
+        as: "investment"
+      });
     }
+    
+    
   };
   Package.init({
     id: {
@@ -28,15 +34,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.TEXT
     },
-    min_investment: {
+    dailyEarning: {
       allowNull: true,
       type: DataTypes.DECIMAL(65, 0),
-      defaultValue: 0,
     },
-    max_investment: {
+    price: {
       allowNull: true,
       type: DataTypes.DECIMAL(65, 0),
-      defaultValue: 0,
+    },
+    harsh_power: {
+      allowNull: true,
+      type: DataTypes.STRING,
     },
     interest: {
       allowNull: true,
@@ -48,6 +56,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    withdrawal:{
+      allowNull: true,
+      type: DataTypes.STRING,
+    }
   }, {
     sequelize,
     modelName: 'Package',

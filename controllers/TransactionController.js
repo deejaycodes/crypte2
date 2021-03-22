@@ -72,6 +72,7 @@ exports.aUserWithdrawals = (req, res, next) => {
     })
     .then(unansweredChats => {
         Withdrawals.findAll({
+          
             where: {
                 user_id: {
                     [Op.eq]: req.session.userId
@@ -82,6 +83,8 @@ exports.aUserWithdrawals = (req, res, next) => {
             ],
         })
         .then(withdrawals => {
+            
+            
             res.render("dashboards/users/user_withdrawals", {
                 withdrawals: withdrawals,
                 messages: unansweredChats
@@ -125,8 +128,13 @@ exports.withdrawWallet = (req, res, next) => {
         })
         .then(user => {
             if (user) {
+                
+                let wallet = Math.abs(Number(user.wallet));
+                let revenue = Math.abs(Number(user.revenue));
+                let userTotal = wallet + revenue
                 res.render("dashboards/users/user_withdrawing", {
                     user: user,
+                    userTotal,
                     messages: unansweredChats
                 });
             } else {
@@ -139,7 +147,7 @@ exports.withdrawWallet = (req, res, next) => {
     })
     .catch(error => {
         req.flash('error', "Server error!");
-        res.redirect("/");
+        res.redirect("back");
     });
 }
 
@@ -150,7 +158,7 @@ exports.withdrawFromWallet = (req, res, next) => {
         acc_number,
         amount
     } = req.body;
-
+   
     if (!bank || !acc_name || !acc_number || !amount) {
         req.flash('warning', "Enter all fields");
         res.redirect("back");
@@ -186,8 +194,9 @@ exports.withdrawFromWallet = (req, res, next) => {
                                 }
                             })
                             .then(updatedUser => {
+                                let owner = req.session.userId
                                 Withdrawals.create({
-                                        user_id: req.session.userId,
+                                       
                                         amount,
                                         bank,
                                         acc_name,
@@ -238,6 +247,7 @@ exports.unapprovedWithdrawals = (req, res, next) => {
     })
     .then(unansweredChats => {
         Withdrawals.findAll({
+           
             where: {
                 status: {
                     [Op.eq]: 0
@@ -249,17 +259,20 @@ exports.unapprovedWithdrawals = (req, res, next) => {
             ],
         })
         .then(withdrawals => {
+            console.log({withdrawals});
             res.render("dashboards/unapproved_withdrawals", {
-                withdrawals: withdrawals,
+                withdrawals,
                 messages: unansweredChats
             });
         })
         .catch(error => {
+            console.log(error)
             req.flash('error', "Server error");
             res.redirect("/");
         });
     })
     .catch(error => {
+        console.log(error)
         req.flash('error', "Server error!");
         res.redirect("/");
     });
@@ -301,11 +314,13 @@ exports.unappWithdrawPaystack = (req, res, next) => {
             });
         })
         .catch(error => {
+            console.log(error)
             req.flash('error', "Server error");
             res.redirect("/");
         });
     })
     .catch(error => {
+        console.log(error)
         req.flash('error', "Server error!");
         res.redirect("/");
     });

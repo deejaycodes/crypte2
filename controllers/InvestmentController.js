@@ -46,12 +46,14 @@ exports.userInvestments = (req, res, next) => {
             });
         })
         .catch(error => {
+            console.log(error)
             //res.redirect("/");
             req.flash('error', `Server Error`);
                                 //res.redirect("back");
         });
     })
     .catch(error => {
+        console.log(error)
         req.flash('error', "Server error!");
         res.redirect("/");
     });

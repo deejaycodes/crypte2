@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const moment = require("moment");
+const dayjs = require("dayjs");
 
 module.exports = (sequelize, DataTypes) => {
   class Withdrawal extends Model {
@@ -64,7 +64,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.DATE,
       get() {
-        return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss');
+        return dayjs(this.getDataValue('createdAt')).format('MMMM DD YYYY HH:mm:ss');
+       
       }
     }
   }, {

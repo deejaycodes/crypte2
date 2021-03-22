@@ -5,7 +5,7 @@
         </div>
         <ul class="sidebar-menu">
             <li class="dropdown text-center">
-                <span style="padding-left: 10px; font-size: large; color: white;"><%= cryptedge.title %></span>
+                <span style="padding-left: 10px; font-size: large; color: white;">Bitmint</span>
             </li>
             <% if(role == 0) { %>
                 <li class="dropdown text-center">
@@ -23,29 +23,18 @@
             <li class="dropdown">
                 <a href="/home" class="nav-link"><i data-feather="home"></i><span>Dashboard</span></a>
             </li>
-            <li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                        class="fa fa-tasks"></i><span>Managers</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/add/manager">Add</a></li>
-                    <li><a class="nav-link" href="/view/managers">View</a></li>
-                </ul>
-            </li>
+            
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i fas fa-piggy-bank
                         class="fa fa-users"></i><span>Users</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="/users">Active</a></li>
                     <li><a class="nav-link" href="/deleted/users">Deleted</a></li>
+                    
                 </ul>
             </li>
             <li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fas fa-user-check"></i>
-                    <span>KYCS</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/unapproved-kycs">Unapproved</a></li>
-                    <li><a class="nav-link" href="/approved-kycs">Approved</a></li>
-                </ul>
+                <a href="/adminmessages" class="nav-link"><i class="fas fa-envelope"></i><span>Broadcast Message</span></a>
             </li>
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
@@ -60,8 +49,7 @@
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i
                         class="fa fa-university"></i><span>Withdrawals</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/unapprovedpaystack">Unapproved (Paystack)</a></li>
-                    <li><a class="nav-link" href="/unapproved-withdrawal">Unapproved (Manual)</a></li>
+                    <li><a class="nav-link" href="/unapproved-withdrawal">Unapproved</a></li>
                     <li><a class="nav-link" href="/approved-withdrawal">Approved</a></li>
                 </ul>
             </li>
@@ -69,19 +57,17 @@
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i
                         data-feather="gift"></i><span>Packages</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/add/package">Add</a></li>
-                    <li><a class="nav-link" href="/view/packages">View</a></li>
+                    <li><a class="nav-link" href="/add/package">Add New</a></li>
+                    <li><a class="nav-link" href="/view/packages">View All</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
-                <a href="/allreferrals" class="nav-link"><i data-feather="link"></i><span>Referrals</span></a>
-            </li>
+            
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fas fa-user-cog"></i><span>Settings</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="/password">Password</a></li>
                     <li><a class="nav-link" href="/bankdetails">Bank Details</a></li>
-                    <li><a class="nav-link" href="/dollarpage">Dollar Values</a></li>
+                    
                 </ul>
             </li>
             <li class="dropdown">

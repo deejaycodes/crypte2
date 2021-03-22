@@ -66,7 +66,7 @@ exports.usersPackages = (req, res, next) => {
                         }
                     },
                     order: [
-                        ['createdAt', 'DESC'],
+                        ['createdAt', 'ASC'],
                     ],
                 })
                 .then(packages => {
@@ -132,10 +132,54 @@ exports.eachPackage = (req, res, next) => {
 
 }
 
+
+//invest package new
+exports.investPackage = (req,res,next)=>{
+    let id  = req.body.idd;
+    let owner = req.session.userId
+
+    Packages.findOne({
+        where:{
+            id:{
+                [Op.eq]:id
+            }
+        }
+    }).then(package=>{
+        if(!package){
+            req.flash('Warning', 'Invalid package')
+            res.redirect('back')
+        }else{
+
+            let duration = Math.abs(Number(package.duration));
+            let amount = Math.abs(Number(package.price));
+            Investments.create({
+                user_id:owner,
+                package_id:id,
+                amount,
+                status: 0,
+                interest: package.dailyEarning,
+                expiredAt: moment().add(duration, 'days')
+               
+
+            }).then(investment=>{
+                req.flash('success', "Investment made successfully!");
+                res.redirect("back");
+            }).catch(error=>{
+                req.flash('error', "Unable to create investment!");
+                res.redirect("back");
+            }).catch(error=>{
+                req.flash('error', "Could not add investment!");
+                res.redirect("back");
+            })
+        }
+    })
+}
+
+
 // invest in a package
-exports.investPackage = (req, res, next) => {
-    let id = req.body.packageId;
-    let amount = req.body.amount;
+exports.investPackages = (req, res, next) => {
+    let id = req.body.idd;
+   
     Packages.findOne({
             where: {
                 id: {
@@ -146,23 +190,18 @@ exports.investPackage = (req, res, next) => {
         .then(package => {
             if (package) {
                 let duration = Math.abs(Number(package.duration));
+               
                 // check details of package if it is greater than max_amt of package 
                 // return max amount exceeded
                 // if it is less, return min_amt exceeded
-                if (!helpers.isNumeric(amount)) {
-                    req.flash('warning', "Enter valid amount");
+                if (!package) {
+                    req.flash('warning', "invalid package");
                     res.redirect("back");
                 } else {
-                    let maxAmt = Math.abs(Number(package.max_investment));
-                    let minAmt = Math.abs(Number(package.min_investment));
-                    amount = Math.abs(Number(amount));
                     if (amount > maxAmt) {
                         req.flash('warning', "Maximum package limit exeeded");
                         res.redirect("back");
-                    } else if (amount < minAmt) {
-                        req.flash('warning', "Minimum package limit exeeded");
-                        res.redirect("back");
-                    } else {
+                    }else {
                         Users.findOne({
                                 where: {
                                     id: {
@@ -401,16 +440,16 @@ exports.editPackage = (req, res, next) => {
                             messages: unansweredChats
                         });
                     } else {
-                        res.redirect("/");
+                        res.redirect("back");
                     }
                 })
                 .catch(error => {
-                    res.redirect("/");
+                    res.redirect("back");
                 });
         })
         .catch(error => {
             req.flash('error', "Server error!");
-            res.redirect("/");
+            res.redirect("back");
         });
 }
 
@@ -439,7 +478,7 @@ exports.adminAllPackages = (req, res, next) => {
                         }
                     },
                     order: [
-                        ['createdAt', 'DESC'],
+                        ['createdAt', 'ASC'],
                     ],
                 })
                 .then(packages => {
@@ -498,37 +537,28 @@ exports.deletePackage = (req, res, next) => {
 exports.postAddPackage = (req, res, next) => {
     const {
         name,
-        description,
-        min_investment,
-        max_investment,
-        interest,
+        price,
+        harsh_power,
+        dailyEarning,
+        withdrawal,
         duration,
     } = req.body;
     // check if any of them are empty
-    if (!name || !description || !min_investment || !max_investment || !interest || !duration) {
+    if (!name || !price || !harsh_power || !dailyEarning || !withdrawal || !duration) {
         req.flash('warning', "enter all fields");
         res.redirect("back");
-    } else if (!helpers.isNumeric(min_investment)) {
+    } else if (!helpers.isNumeric(price)) {
         req.flash('warning', "enter valid minimum investment(digits only)");
         res.redirect("back");
-    } else if (!helpers.isNumeric(max_investment)) {
+    } else if (!helpers.isNumeric(dailyEarning)) {
         req.flash('warning', "enter valid maximum investment(digits only)");
         res.redirect("back");
-    } else if (Math.abs(Number(min_investment)) > Math.abs(Number(max_investment))) {
-        req.flash('warning', "Minimum investment cannot be greater than maximum investment");
-        res.redirect("back");
-    } else if (!helpers.isNumeric(interest)) {
-        req.flash('warning', "enter valid interest(digits only)");
-        res.redirect("back");
-    } 
+    }  
     // else if (Math.abs(Number(interest)) > 100) {
     //     req.flash('warning', "Interest must be less than 100%");
     //     res.redirect("back");
     // } 
-    else if (!helpers.isNumeric(duration)) {
-        req.flash('warning', "enter valid duration(digits only)");
-        res.redirect("back");
-    } else {
+     else {
         Packages.findOne({
                 where: {
                     name: {
@@ -542,12 +572,12 @@ exports.postAddPackage = (req, res, next) => {
                     res.redirect("back");
                 } else {
                     Packages.create({
-                            name,
-                            description,
-                            min_investment,
-                            max_investment,
-                            interest,
-                            duration
+                        name,
+                        price,
+                        harsh_power,
+                        dailyEarning,
+                        withdrawal,
+                        duration,
                         })
                         .then(packages => {
                             req.flash('success', "Package added successfully!");
@@ -569,27 +599,21 @@ exports.postAddPackage = (req, res, next) => {
 exports.postUpdatePackage = (req, res, next) => {
     const {
         name,
-        description,
-        min_investment,
-        max_investment,
-        interest,
+        price,
+        harsh_power,
+        dailyEarning,
+        withdrawal,
         duration,
     } = req.body;
     // check if any of them are empty
-    if (!name || !min_investment || !max_investment || !interest || !duration) {
+    if (!name || !price || !harsh_power || !dailyEarning || !withdrawal || !duration) {
         req.flash('warning', "enter all fields");
         res.redirect("back");
-    } else if (!helpers.isNumeric(min_investment)) {
-        req.flash('warning', "enter valid minimum investment(digits only)");
+    } else if (!helpers.isNumeric(price)) {
+        req.flash('warning', "enter valid price(digits only)");
         res.redirect("back");
-    } else if (!helpers.isNumeric(max_investment)) {
-        req.flash('warning', "enter valid maximum investment(digits only)");
-        res.redirect("back");
-    } else if (Math.abs(Number(min_investment)) > Math.abs(Number(max_investment))) {
-        req.flash('warning', "Minimum investment cannot be greater than maximum investment");
-        res.redirect("back");
-    } else if (!helpers.isNumeric(interest)) {
-        req.flash('warning', "enter valid interest(digits only)");
+    } else if (!helpers.isNumeric(dailyEarning)) {
+        req.flash('warning', "enter valid daily earning (digits only)");
         res.redirect("back");
     } 
     // else if (Math.abs(Number(interest)) > 100) {
@@ -613,12 +637,12 @@ exports.postUpdatePackage = (req, res, next) => {
                     res.redirect("back");
                 } else {
                     Packages.update({
-                            name: name,
-                            description: description,
-                            min_investment: min_investment,
-                            max_investment: max_investment,
-                            interest: interest,
-                            duration: duration
+                        name,
+                        price,
+                        harsh_power,
+                        dailyEarning,
+                        withdrawal,
+                        duration,
                         }, {
                             where: {
                                 id: {

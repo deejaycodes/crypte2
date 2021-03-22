@@ -5,7 +5,7 @@
         </div>
         <ul class="sidebar-menu">
             <li class="dropdown text-center">
-                <span style="padding-left: 10px; font-size: large; color: white;"><%= cryptedge.title %></span>
+                <span style="padding-left: 10px; font-size: large; color: white;"><%= bitmint.title %></span>
             </li>
             <% if(role == 1) { %>
             <li class="dropdown text-center">
@@ -17,41 +17,37 @@
             </li>
             <% } else if( role == 3) { %>
             <li class="dropdown text-center">
-                <span style="padding-left: 10px; font-size: large; color: white;">Welcome User</span>
+                <span style="padding-left: 10px; font-size: large; color: white;">Welcome, user</span>
             </li>
             <% } %>
             <li class="dropdown">
-                <a href="/home" class="nav-link"><i data-feather="home"></i><span>Dashboard</span></a>
+                <a href="/home" class="nav-link"><i class="fas fa-home"></i><span>Dashboard</span></a>
             </li>
+           
+            
             <li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                        class="fas fa-wallet"></i><span>Wallet</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/fundwallet">Fund</a></li>
-                    <li><a class="nav-link" href="/withdraw">Withdraw</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="gift"></i><span>Invest</span></a>
+                <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fas fa-wallet"></i><span>Invest</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="/packages">Packages</a></li>
-                    <li><a class="nav-link" href="/investments">Investments</a></li>
+                    <li><a class="nav-link" href="/investments">My Investments</a></li>
                 </ul>
             </li>
             <li class="dropdown">
                 <a href="#" class="menu-toggle nav-link has-dropdown"><i
                         class="fas fa-history"></i><span>Transactions</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="/deposits">Deposits</a></li>
-                    <li><a class="nav-link" href="/mywithdraws">Withdrawals</a></li>
-                    <li><a class="nav-link" href="/bankdeposits">Uploaded Deposits</a></li>
+                   
+                    <li><a class="nav-link" href="/withdraw">Withdraw</a></li>
+                    <li><a class="nav-link" href="/mywithdraws">My Withdrawals</a></li>
                 </ul>
             </li>
-            <li class="dropdown">
-                <a href="/referrals" class="nav-link"><i data-feather="link"></i><span>Referrals</span></a>
-            </li>
+<!--             
             <li class="dropdown">
                 <a href="/user_chat" class="nav-link"><i class="fas fa-comment"></i><span>Chat</span></a>
+            </li> -->
+            
+            <li class="dropdown">
+                <a href="/messages" class="nav-link"><i class="fas fa-envelope"></i><span>Admin Messages</span></a>
             </li>
             <li class="dropdown">
                 <a href="/settings" class="nav-link"><i class="fas fa-user-cog"></i><span>Settings</span></a>

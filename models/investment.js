@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const moment = require("moment");
+const dayjs = require("dayjs");
 
 module.exports = (sequelize, DataTypes) => {
   class Investment extends Model {
@@ -17,8 +17,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "package_id",
         as: "package",
       });
+      Investment.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+      });
     }
+
   };
+  
   Investment.init({
     id: {
       allowNull: false,
@@ -34,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       type: DataTypes.UUID,
     },
+    status: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+    },
     amount: {
       allowNull: true,
       type: DataTypes.DECIMAL(65, 0),
@@ -48,14 +58,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.DATE,
       get() {
-        return moment(this.getDataValue('expiredAt')).format('YYYY-MM-DD HH:mm:ss');
+        return dayjs(this.getDataValue('expiredAt')).format('MMMM DD YYYY HH:mm:ss');
       }
     },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
       get() {
-        return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss');
+        return dayjs(this.getDataValue('createdAt')).format('MMMM DD YYYY HH:mm:ss');
       }
     }
   }, {

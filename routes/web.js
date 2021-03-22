@@ -350,8 +350,8 @@ router.get('/auth/google/callback',
     });
 
 
-router.post("/signin", [AuthMiddleware.redirectHome], AuthController.login);
-router.get("/register", [AuthMiddleware.redirectHome, AuthMiddleware.authVerirfication], AuthController.signup);
+router.post("/signin",  AuthController.login);
+router.get("/register", AuthController.signup);
 //router.post("/signup", [AuthMiddleware.redirectHome, AuthMiddleware.authVerirfication], AuthController.register);
 //router.get("/signup", AuthController.signup);
 router.post("/signup", AuthController.signupUser);
@@ -362,6 +362,7 @@ router.get("/pricing", AuthController.pricing);
 router.get("/contact", AuthController.contact);
 router.get("/privacy", AuthController.privacy);
 router.get("/terms", AuthController.terms);
+
 router.get("/reset", [AuthMiddleware.redirectHome, AuthMiddleware.authVerirfication], AuthController.getLink);
 router.post("/reset", [AuthMiddleware.redirectHome, AuthMiddleware.authVerirfication], AuthController.postGetLink);
 router.get("/resetpassword", [AuthMiddleware.redirectHome, AuthMiddleware.authVerirfication], AuthController.resetPassword);
@@ -378,10 +379,10 @@ router.post("/update-password", [AuthMiddleware.redirectLogin, AuthMiddleware.au
 // coinqvest routes
 router.post("/createcheckout", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], CoinqvestController.createCheckout);
 
+
 // users specific routes
 router.get("/fundwallet", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], WalletController.walletPage);
 router.post("/fundwallet", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], WalletController.fundWallet);
-
 
 // users
 router.get("/settings", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], ProfileController.settingsPage);
@@ -389,7 +390,11 @@ router.get("/users", AuthMiddleware.redirectAdminLogin, UserController.allUsers)
 router.get("/packages", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], PackageController.usersPackages);
 router.get("/referrals", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], DashboardController.userReferral);
 router.get("/allreferrals", AuthMiddleware.redirectAdminLogin, DashboardController.allReferral);
+router.get('/adminmessages',AuthMiddleware.redirectAdminLogin, ChatController.adminMessage)
 router.get("/user_chat", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], ChatController.userChatPage);
+router.post("/sendmessage", AuthMiddleware.redirectAdminLogin, ChatController.postAdminMessage);
+router.get("/messages", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], ChatController.allAdminMessages);
+
 router.get("/user_kyc", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], KycController.userKyc);
 router.get("/profile", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], ProfileController.profilePage);
 router.get("/editprofile", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], ProfileController.editProfilePage);
@@ -398,8 +403,8 @@ router.post("/editprofile", [AuthMiddleware.redirectUserLogin, AuthMiddleware.au
 router.post("/updatetwoway", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], ProfileController.updateTwoWay);
 router.post("/emailtwoway", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], ProfileController.updateEmailWay);
 router.post("/user_kyc", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], KycController.uploadKyc);
-router.get("/withdraw", [AuthMiddleware.validatedKYC, AuthMiddleware.authVerirfication], TransactionController.withdrawWallet);
-router.post("/userwithdraw", [AuthMiddleware.validatedKYC, AuthMiddleware.authVerirfication], TransactionController.withdrawFromWallet);
+router.get("/withdraw",  AuthMiddleware.authVerirfication, TransactionController.withdrawWallet);
+router.post("/userwithdraw",  AuthMiddleware.authVerirfication, TransactionController.withdrawFromWallet);
 router.get("/mywithdraws", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], TransactionController.aUserWithdrawals);
 router.get("/investments", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], InvestmentController.userInvestments);
 router.get("/deposits", [AuthMiddleware.redirectUserLogin, AuthMiddleware.authVerirfication], TransactionController.userDeposits);

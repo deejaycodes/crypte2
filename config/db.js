@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
-module.exports = new Sequelize('cryptedge', 'cryptedge_user', '', {
+module.exports = new Sequelize('bitmint_db', 'bitmint_user', 'd$~3M0v1X~om', {query:{raw:true}},{
     host: 'localhost',
     dialect: 'mysql',
+    
   
     pool: {
       max: 5,

@@ -67,7 +67,7 @@ exports.privacy = (req, res, next) => {
 
 
 exports.getLink = (req, res, next) => {
-    res.render("auths/reset");
+    res.render("forgot");
 }
 
 exports.twofaPage = (req, res, next) => {
@@ -124,16 +124,20 @@ exports.emailFaPage = (req, res, next) => {
                     .then(auth => {
                         const output = `<html>
                                         <head>
-                                          <title>Cryptedge Email Authentication</title>
+                                          <title>Bitmint Email Authentication</title>
                                         </head>
                                         <body>
-                                        <p>Use the below value to verify your email</p>
+                                        <p>Use the below value to verify your email</p></br>
+                                        <strong>${email_value}</strong>
+                                        
+                                       
                                         </body>
                                     </html>`;
                         let transporter = nodemailer.createTransport({
+        
                             host: parameters.EMAIL_HOST,
                             port: parameters.EMAIL_PORT,
-                            secure: false, // true for 465, false for other ports
+                            secure: true, // true for 465, false for other ports
                             auth: {
                                 user: parameters.EMAIL_USERNAME, // generated ethereal user
                                 pass: parameters.EMAIL_PASSWORD, // generated ethereal password
@@ -141,17 +145,19 @@ exports.emailFaPage = (req, res, next) => {
                         });
 
                         let mailOptions = {
-                            from: ` "CRYPTEDGE GROUP" <${parameters.EMAIL_USERNAME}>`, // sender address
+                            from: ` "BITMINT" <${parameters.EMAIL_USERNAME}>`, // sender address
                             to: `${user.email}`, // list of receivers
-                            subject: "[Cryptedge] Email Authentication", // Subject line
-                            text: "CRYPTEDGE GROUP", // plain text body
+                            subject: "[Bitmint] Email Authentication", // Subject line
+                            text: "Bitmint", // plain text body
                             html: output, // html body
                         }
                         transporter.sendMail(mailOptions, (error, info) => {
                             if (error) {
+                                console.log(error)
                                 req.flash('error', "Error sending mail, refresh page");
                                 res.render("auths/auth_email");
                             } else {
+                                console.log('success')
                                 req.flash('success', "Reset link sent to email");
                                 res.render("auths/auth_email");
                             }
@@ -255,6 +261,8 @@ exports.verifyEmail = (req, res, next) => {
 exports.resetPassword = (req, res, next) => {
     let email = req.query.email;
     let token = req.query.token;
+    console.log(email)
+    console.log(token)
     ResetPasswords.findOne({
             where: {
                 [Op.and]: [{
@@ -271,18 +279,23 @@ exports.resetPassword = (req, res, next) => {
             }
         })
         .then(reset => {
+           
             if (reset) {
+               
+
                 // save as session the reset email and reset token
                 req.session.resetEmail = email;
                 req.session.resetToken = token;
                 console.log(`${email} ${token}`);
-                res.render("forgot");
+                res.render("resetfrommail");
             } else {
+                
                 req.flash('warning', "Invalid reset details");
                 res.redirect("/");
             }
         })
         .catch(error => {
+            
             req.flash('error', "Server Error, try again!");
             res.redirect("/");
         });
@@ -315,7 +328,7 @@ exports.postResetPassword = (req, res, next) => {
             })
             .then(update => {
                 req.flash('success', "Password changed successfully!");
-                res.redirect("/");
+                res.redirect("/login");
             })
             .catch(error => {
                 req.flash('error', "Server Error, try again!");
@@ -341,20 +354,21 @@ exports.postGetLink = (req, res, next) => {
             })
             .then(user => {
                 if (user) {
+                    
                     let token = uniqueString();
                     const output = `<html>
                                         <head>
-                                          <title>Reset Password link for Cryptedge</title>
+                                          <title>Reset Password link for Bitmint</title>
                                         </head>
                                         <body>
-                                        <p>Click the link below to reset password for your cryptedge account</p>
-                                        <a href='${parameters.SITE_URL}/reset?email=${email}&token=${token}'>${parameters.SITE_URL}/reset?email=${email}&token=${token}</a>
+                                        <p>You requested to change your password, please ignore If you didn't make the request</p>
+                                        <a href='${parameters.SITE_URL}/resetpassword?email=${email}&token=${token}'>RESET PASSWORD</a>
                                         </body>
                                     </html>`;
                     let transporter = nodemailer.createTransport({
                         host: parameters.EMAIL_HOST,
                         port: parameters.EMAIL_PORT,
-                        secure: false, // true for 465, false for other ports
+                        secure: true, // true for 465, false for other ports
                         auth: {
                             user: parameters.EMAIL_USERNAME, // generated ethereal user
                             pass: parameters.EMAIL_PASSWORD, // generated ethereal password
@@ -363,16 +377,18 @@ exports.postGetLink = (req, res, next) => {
 
                     // send mail with defined transport object
                     let mailOptions = {
-                        from: ` "CRYPTEDGE GROUP" <${parameters.EMAIL_USERNAME}>`, // sender address
+                        from: ` "BITMINT" <${parameters.EMAIL_USERNAME}>`, // sender address
                         to: `${email}`, // list of receivers
-                        subject: "[Cryptedge] Please reset your password", // Subject line
-                        text: "CRYPTEDGE GROUP", // plain text body
+                        subject: "[Bitmint] Please reset your password", // Subject line
+                        text: "BITMINT", // plain text body
                         html: output, // html body
                     }
 
                     // insert into forgot password the value of the token and email
                     // if email exists already update else insert new
                     ResetPasswords.findOne({
+                        
+                        
                             where: {
                                 user_email: {
                                     [Op.eq]: email
@@ -380,6 +396,7 @@ exports.postGetLink = (req, res, next) => {
                             }
                         })
                         .then(reset => {
+                           
                             if (reset) {
                                 // update
                                 ResetPasswords.update({
@@ -476,6 +493,7 @@ exports.login = (req, res, next) => {
             })
             .then((user) => {
                 if (user) {
+                    console.log('USER FOUND')
                     let password = req.body.password;
                     if (bcrypt.compareSync(password, user.password)) {
                         req.session.userId = user.id;
@@ -515,7 +533,6 @@ exports.signupUser = (req, res, next) => {
         password,
         password2,
     } = req.body;
-    console.log({BODY: req.body})
     if (!name) {
         req.flash('warning', "Please enter name");
         res.redirect("back");
@@ -617,11 +634,13 @@ exports.signupUser = (req, res, next) => {
                                         .catch(error => {
                                             req.flash('error', "Something went wrong try again");
                                             res.redirect("back");
+                                            res.send(error)
                                         });
                                 })
                                 .catch(error => {
                                     req.flash('error', "Something went wrong try again");
-                                    res.redirect("back");
+                                    //res.redirect("back");
+                                    res.send(error)
                                 });
                         } else {
                             // if referral is not valid, just create the user like that
@@ -638,7 +657,7 @@ exports.signupUser = (req, res, next) => {
                                 })
                                 .then((response) => {
                                     req.flash('success', "Registration successful");
-                                    res.redirect("/home");
+                                    res.redirect("/login");
                                     req.session.ref = "";
                                 })
                                 .catch(error => {
@@ -734,5 +753,5 @@ exports.logout = (req, res, next) => {
     //     res.redirect("/");
     // });
     req.session = null;
-    res.redirect("/login");
+    res.redirect("/");
 }
