@@ -10,7 +10,7 @@ const Kycs = require("../models").Kyc;
 const Investments = require("../models").Investment;
 const Chats = require("../models").Chat;
 const AdminMessages = require('../models').AdminMessage;
-const Withdrawal = require("../models/").Withdrawal
+const Withdrawal = require("../models/withdrawal").Withdrawal
 
 // imports initialization
 const Op = Sequelize.Op;
@@ -53,15 +53,15 @@ exports.home = (req, res, next) => {
                                     }
                                 }
                             }).then(referral => {
-                                Investments.findAll({
-                                    where: {
-                                        user_id: {
-                                            [Op.eq]: req.session.userId
-                                        }
-                                    },
-                                  
+                                Withdrawal.findAll({
+                                        where: {
+                                            user_id: {
+                                                [Op.eq]: req.session.userId
+                                            }
+                                        },
+                                        paranoid: false,
                                     })
-                                    .then(investment => {
+                                    .then(withdrawals => {
                                         Investments.findAll({
                                                 where: {
                                                     [Op.and]: [{
@@ -94,7 +94,7 @@ exports.home = (req, res, next) => {
                                                                 kyc: kyc.status,
                                                                 wallet: user.wallet,
                                                                 revenue:user.revenue,
-                                                                
+                                                                withdrawals,
                                                                 referral: referral.length,
                                                                 investment: investment.length,
                                                                 active_investment: activeInvestments.length,
@@ -104,7 +104,7 @@ exports.home = (req, res, next) => {
                                                             res.render("dashboards/users/user_home", {
                                                                 user: user,
                                                                 kyc: 0,
-                                                               
+                                                                withdrawals,
                                                                 wallet: user.wallet,
                                                                 revenue:user.revenue,
                                                                 referral: referral.length,

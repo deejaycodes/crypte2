@@ -36,23 +36,114 @@ div class="container-fluid">
                                         <p>Withdrawal Limit = <%= packages[i]['withdrawal'] %></p>
                     <hr>
                     <input type="hidden" id="price<%= i %>" value="<%= packages[i]['price'] %>">
-                   
-                    <a href="javascript: void(0);" class="btn btn-warning" data-toggle="modal" id = "payBtn<%= i %>" data-target="#startNow<%= i %>">Start Now</a>
+                     
+                   <a href="javascript: void(0);" class="btn btn-warning" data-toggle="modal" id = "payBtn<%= i %>" data-target="#startNow<%= i %>">Start Now</a>
                                     </div> <!-- end card-body-->
             </div>
         </div>
+        <script>
+            document.addEventListener('click', function (event) {  
+                console.log('button is working')      
+                  // If the clicked element doesn't have the right selector, bail
+                  if (!event.target.matches("#payBtn<%= i %>")) return;
+                      // Don't follow the link
+                      event.preventDefault();
+                  // Log the clicked element in the console
+                  function payWithCryptos() {
+    let amount = amountInput.value;
+    if (!digits_only(amount) || amount.length < 2) {
+        iziToast.warning({
+            title: 'Error!',
+            message: 'Invalid amount',
+            position: 'bottomRight'
+        });
+    } else {
+        let email = document.getElementById("user_email").value;
+        let phone = document.getElementById('user_phone').value;
+        paylot({
+            amount: amount,
+            key: 'pyt_pk-f2eb92b2cde745098013f2dac333af05',
+            reference: Date.now() + '' + Math.floor((Math.random() * 1000000000) + 1),
+            currency: 'USD',
+            payload: {
+                type: 'payment',
+                subject: 'Bitmint Option Wallet Funding',
+                email: email,
+                sendMail: true
+            },
+            onClose: function(){
+                iziToast.warning({
+                    title: 'Warning!',
+                    message: 'PAYLOT CRYPTO channel closed',
+                    position: 'bottomRight'
+                });
+            }
+        }, (err, tx) => {
+            if(err){
+                iziToast.warning({
+                    title: 'Warning!',
+                    message: 'PAYLOT CRYPTO channel encountered an error',
+                    position: 'bottomRight'
+                });
+            }else{
+                //Transaction was successful
+                let reference = tx.reference;
+                let amountPaid = tx.amount;
+                $.ajax({
+                    type: 'POST',
+                    url: '/fundwallet',
+                    data: {
+                        email: email,
+                        amount: amountPaid,
+                        reference: reference,
+                        channel: "PAYLOT CRYPTO"
+                    },
+                    success: function(data) {
+                        if (data.status == true) {
+                            iziToast.success({
+                                title: 'Success!',
+                                message: 'Wallet funded successfully',
+                                position: 'bottomRight'
+                            });
+                            setTimeout(function () {
+                                window.location=window.location;
+                            }, 5000); 
+                        } else {
+                            iziToast.error({
+                                title: 'Error!',
+                                message: 'Something went wrong',
+                                position: 'bottomRight'
+                            });    
+                        }
+                    },
+                    error: function () {
+                        iziToast.error({
+                            title: 'Error!',
+                            message: 'Something went wrong',
+                            position: 'bottomRight'
+                        });
+                    }
+                });
+            }
+        });  
+    }
+}
 
+payWithCryptos()
+                
+                  });
+          </script>
         <script>
             document.addEventListener('click', function (event) {        
                   // If the clicked element doesn't have the right selector, bail
-                  if (!event.target.matches("#payBtn<%= i %>")) return;
+                  if (!event.target.matches("#payBtggn<%= i %>")) return;
                       // Don't follow the link
                       event.preventDefault();
                   // Log the clicked element in the console
             function fetchData(id){
             const statementEl = document.getElementById('statement<%= i %>')
             const value = document.getElementById("price<%= i %>").value
-            const url = "https://blockchain.info/tobtc?currency=USD&value="
+            const url = "http:localhost:3000/fundwallet?amount="
             const url2 = url+value
             fetch(url2)
                 .then(response => response.json())
@@ -66,7 +157,8 @@ div class="container-fluid">
                 
                   });
           </script>
-      
+      <script src="https://js.paylot.co/v1/inline.min.js"></script>
+      <script src="/js/payments.js"></script> 
                 <div class="row justify-content-center">
 
 
@@ -82,7 +174,7 @@ div class="container-fluid">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title" id="myCenterModalLabel">Payment for: <%= packages[i]['plan'] %></h4>
+                                <h4 class="modal-title" id="myCenterModalLabel">Payment for: <%= packages[i]['name'] %></h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                             </div>
                             <div class="modal-body">
@@ -118,7 +210,7 @@ div class="container-fluid">
                                 </script>  
         
         <% } %> 
-                          
+                
 <%- include("../../partials/user_footer2") %>
 
 <!-- cryptedge scripts -->

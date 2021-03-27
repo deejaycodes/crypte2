@@ -80,7 +80,7 @@ function payWithCryptos() {
     let amount = amountInput.value;
     if (!digits_only(amount) || amount.length < 2) {
         iziToast.warning({
-            title: 'Warning!',
+            title: 'Error!',
             message: 'Invalid amount',
             position: 'bottomRight'
         });
@@ -89,12 +89,12 @@ function payWithCryptos() {
         let phone = document.getElementById('user_phone').value;
         paylot({
             amount: amount,
-            key: 'pyt_pk-8a13fd5280a144c1bf419bb5332172fe',
+            key: 'pyt_pk-f2eb92b2cde745098013f2dac333af05',
             reference: Date.now() + '' + Math.floor((Math.random() * 1000000000) + 1),
             currency: 'USD',
             payload: {
                 type: 'payment',
-                subject: 'Cryptedge Wallet Funding',
+                subject: 'Bitmint Option Wallet Funding',
                 email: email,
                 sendMail: true
             },

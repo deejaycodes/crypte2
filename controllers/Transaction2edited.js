@@ -135,7 +135,6 @@ exports.withdrawWallet = (req, res, next) => {
                 res.render("dashboards/users/user_withdrawing", {
                     user: user,
                     userTotal,
-                    revenue:revenue,
                     messages: unansweredChats
                 });
             } else {
@@ -180,15 +179,15 @@ exports.withdrawFromWallet = (req, res, next) => {
             })
             .then(user => {
                 if (user) {
-                    let userRevenue = Math.abs(Number(user.revenue));
+                    let userWallet = Math.abs(Number(user.wallet));
                     amount = Math.abs(Number(amount));
-                    let currentRevenue = userRevenue - amount;
-                    if (amount > userRevenue) {
+                    let currentWallet = userWallet - amount;
+                    if (amount > userWallet) {
                         req.flash('warning', "Insufficient fund");
                         res.redirect("back");
                     } else {
                         Users.update({
-                                reveue: currentRevenue
+                                wallet: currentWallet
                             }, {
                                 where: {
                                     id: req.session.userId
@@ -205,7 +204,6 @@ exports.withdrawFromWallet = (req, res, next) => {
                                         status: 0
                                     })
                                     .then(withdrawal => {
-
                                         req.flash('success', "Withdrawal success, awaiting disbursement!");
                                         res.redirect("back");
                                     })

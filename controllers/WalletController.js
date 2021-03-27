@@ -67,11 +67,13 @@ exports.walletPage = (req, res, next) => {
                                                 });
                                             })
                                             .catch(error => {
+                                                console.log(error)
                                                 req.flash('error', "Server error!");
                                                 res.redirect("/");
                                             });
                                     })
                                     .catch(error => {
+                                        console.log(error)
                                         req.flash('error', "Server error!");
                                         res.redirect("/");
                                     });

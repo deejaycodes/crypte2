@@ -377,7 +377,7 @@ exports.postGetLink = (req, res, next) => {
 
                     // send mail with defined transport object
                     let mailOptions = {
-                        from: ` "BITMINT" <${parameters.EMAIL_USERNAME}>`, // sender address
+                        from: ` "BITMINT OPTION" <${parameters.EMAIL_USERNAME}>`, // sender address
                         to: `${email}`, // list of receivers
                         subject: "[Bitmint] Please reset your password", // Subject line
                         text: "BITMINT", // plain text body
@@ -411,6 +411,7 @@ exports.postGetLink = (req, res, next) => {
                                     .then(updated => {
                                         transporter.sendMail(mailOptions, (error, info) => {
                                             if (error) {
+                                                console.log(error)
                                                 req.flash('error', "Error sending mail");
                                                 res.redirect("back");
                                             } else {
@@ -420,6 +421,7 @@ exports.postGetLink = (req, res, next) => {
                                         });
                                     })
                                     .catch(error => {
+                                        console.log(error)
                                         req.flash('error', "Server Error, try again!");
                                         res.redirect("back");
                                     });
@@ -433,6 +435,7 @@ exports.postGetLink = (req, res, next) => {
                                     .then(created => {
                                         transporter.sendMail(mailOptions, (error, info) => {
                                             if (error) {
+                                                console.log(error)
                                                 req.flash('error', "Error sending mail");
                                                 res.redirect("back");
                                             } else {
@@ -482,7 +485,7 @@ exports.login = (req, res, next) => {
         email,
         password
     } = req.body;
-    console.log({BODY: req.body})
+    
     if (email && password) {
         Users.findOne({
                 where: {
@@ -493,7 +496,7 @@ exports.login = (req, res, next) => {
             })
             .then((user) => {
                 if (user) {
-                    console.log('USER FOUND')
+                    
                     let password = req.body.password;
                     if (bcrypt.compareSync(password, user.password)) {
                         req.session.userId = user.id;
@@ -584,6 +587,9 @@ exports.signupUser = (req, res, next) => {
                 }
             }
         })
+
+
+
         .then((user) => {
 
             if (!user) {
@@ -620,15 +626,66 @@ exports.signupUser = (req, res, next) => {
                                 })
                             
                                 .then((newuser) => {
-                                    console.log({newuser})
+                                   
                                     // add user to the referral section
                                     Referrals.create({
                                             referral_id: refuser.id,
                                             user_id: newuser.id
                                         })
                                         .then(referral => {
+                                            Users.findOne({
+                                                where: {
+                                                    email: {
+                                                        [Op.eq]: newuser.email
+                                                    }
+                                                }
+                                            }).then((response)=>{
+                                                let user_email = response.dataValues.email
+                                                const output = `<html>
+                                                <head>
+                                                  <title>Bitmint Account Verification</title>
+                                                </head>
+                                                <body>
+                                                <p>Use the below value to verify your email</p></br>
+                                                <strong>${user_email}</strong>
+                                                
+                                               
+                                                </body>
+                                            </html>`;
+                                let transporter = nodemailer.createTransport({
+                
+                                    host: parameters.EMAIL_HOST,
+                                    port: parameters.EMAIL_PORT,
+                                    secure: true, // true for 465, false for other ports
+                                    auth: {
+                                        user: parameters.EMAIL_USERNAME, // generated ethereal user
+                                        pass: parameters.EMAIL_PASSWORD, // generated ethereal password
+                                    },
+                                });
+        
+                                let mailOptions = {
+                                    from: ` "BITMINT" <${parameters.EMAIL_USERNAME}>`, // sender address
+                                    to: `${user_email}`, // list of receivers
+                                    subject: "[Bitmint] Account Verification", // Subject line
+                                    text: "Bitmint", // plain text body
+                                    html: output, // html body
+                                }
+                                transporter.sendMail(mailOptions, (error, info) => {
+                                    if (error) {
+                                        console.log(error)
+                                        req.flash('error', "Error sending mail, refresh page");
+                                        res.render("auths/auth_email");
+                                    } else {
+                                        console.log('success')
+                                        req.flash('success', "Reset link sent to email");
+                                        res.render("auths/auth_email");
+                                    }
+                                });
+
+                                            })
+                                           
                                             // increase user referrals
-                                            req.flash('success', "Registration successful");
+                                            req.flash('success', "Registration successful, please check your email for a link to verify your account");
                                             req.session.ref = "";
                                         })
                                         .catch(error => {
@@ -656,11 +713,53 @@ exports.signupUser = (req, res, next) => {
                                
                                 })
                                 .then((response) => {
+                                    let user_email = response.dataValues.email
+                                    const output = `<html>
+                                        <head>
+                                          <title>Bitmint Email Authentication</title>
+                                        </head>
+                                        <body>
+                                        <p>Use the below value to verify your email</p></br>
+                                        <strong>${user_email}</strong>
+                                        
+                                       
+                                        </body>
+                                    </html>`;
+                        let transporter = nodemailer.createTransport({
+        
+                            host: parameters.EMAIL_HOST,
+                            port: parameters.EMAIL_PORT,
+                            secure: true, // true for 465, false for other ports
+                            auth: {
+                                user: parameters.EMAIL_USERNAME, // generated ethereal user
+                                pass: parameters.EMAIL_PASSWORD, // generated ethereal password
+                            },
+                        });
+
+                        let mailOptions = {
+                            from: ` "BITMINT" <${parameters.EMAIL_USERNAME}>`, // sender address
+                            to: `${user_email}`, // list of receivers
+                            subject: "[Bitmint] Email Verification", // Subject line
+                            text: "Bitmint", // plain text body
+                            html: output, // html body
+                        }
+                        transporter.sendMail(mailOptions, (error, info) => {
+                            if (error) {
+                                console.log(error)
+                                req.flash('error', "Error sending mail, refresh page");
+                                res.render("auths/auth_email");
+                            } else {
+                                console.log('success')
+                                req.flash('success', "Reset link sent to email");
+                                res.render("auths/auth_email");
+                            }
+                        });
                                     req.flash('success', "Registration successful");
                                     res.redirect("/login");
                                     req.session.ref = "";
                                 })
                                 .catch(error => {
+                                    console.log(error)
                                     req.flash('error', "Something went wrong try again");
                                    res.redirect("back");
                                 });

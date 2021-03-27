@@ -99,10 +99,10 @@ exports.createTransferRecipient = (req, res, next) => {
             })
             .then(user => {
                 if (user) {
-                    let userWallet = Math.abs(Number(user.wallet));
+                    let userRevenue = Math.abs(Number(user.revenue));
                     amount = Math.abs(Number(amount));
-                    let currentWallet = userWallet - amount;
-                    if (amount > userWallet) {
+                    let currentRevenue = userRevenue - amount;
+                    if (amount > userRevenue) {
                         res.status(200).json({
                             status: false,
                             message: "Insufficient fund"
@@ -123,7 +123,7 @@ exports.createTransferRecipient = (req, res, next) => {
                             .then(response => {
                                 if (response.data.status) {
                                     Users.update({
-                                            wallet: currentWallet
+                                            revenue: currentRevenue
                                         }, {
                                             where: {
                                                 id: req.session.userId

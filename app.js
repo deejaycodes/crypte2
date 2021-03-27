@@ -28,7 +28,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 let users = []; 
-const db = new Sequelize('bitmint_db', 'bitmint_user', 'dejideji123!',{
+const db = new Sequelize('bitmint2', 'cryptedge_user', '',{
     host:'localhost',
     dialect:'mysql',
 
@@ -126,70 +126,70 @@ io.on("connection", socket => {
     });
 });
 
-// // scheduler task and all
-// cron.schedule("* * * * * *", () => {
-//     //console.log("Sheduler is running");
-//     // if(shell.exec("node cronjob.js").code !== 0) {
-//     //     console.log("something went wrong");
-//     Investments.findAll({
-//             where: {
-//                 expiredAt: {
-//                     [Op.lte]: moment().format('YYYY-MM-DD HH:mm:ss')
-//                 }
-//             }
-//         })
-//         .then(inactiveInvestments => {
-//             const records = inactiveInvestments.map(function (expiredInvestment) {
-//                 Users.findOne({
-//                         where: {
-//                             id: {
-//                                 [Op.eq]: expiredInvestment.user_id
-//                             }
-//                         }
-//                     })
-//                     .then(user => {
-//                         let userWallet = Math.abs(Number(user.wallet));
-//                         let investmentAmount = Math.abs(Number(expiredInvestment.amount));
-//                         let interest = Math.abs(Number(expiredInvestment.interest));
-//                         let currentWallet = userWallet + (investmentAmount * interest / 100);
-//                         Users.update({
-//                                 wallet: currentWallet
-//                             }, {
-//                                 where: {
-//                                     id: {
-//                                         [Op.eq]: expiredInvestment.user_id
-//                                     }
-//                                 }
-//                             })
-//                             .then(updatedWallet => {
-//                                 Investments.destroy({
-//                                         where: {
-//                                             id: {
-//                                                 [Op.eq]: expiredInvestment.id
-//                                             }
-//                                         }
-//                                     })
-//                                     .then(inactiveInvestments => {
-//                                         return null;
-//                                     })
-//                                     .catch(error => {
-//                                         return null;
-//                                     });
-//                             })
-//                             .catch(error => {
-//                                 return null;
-//                             });
-//                     })
-//                     .catch(error => {
-//                         return null;
-//                     });
-//             });
-//         })
-//         .catch(error => {
-//             return null;
-//         });
-//     // }
-// });
+// scheduler task and all
+cron.schedule("*/3 * * * *", () => {
+    console.log("Sheduler is running");
+    // if(shell.exec("node cronjob.js").code !== 0) {
+    //     console.log("something went wrong");
+    Investments.findAll({
+        //     where: {
+        //         expiredAt: {
+        //             [Op.lte]: moment().format('YYYY-MM-DD HH:mm:ss')
+        //         }
+        //     }
+        })
+        .then(inactiveInvestments => {
+            const records = inactiveInvestments.map(function (expiredInvestment) {
+                Users.findOne({
+                        where: {
+                            id: {
+                                [Op.eq]: expiredInvestment.user_id
+                            }
+                        }
+                    })
+                    .then(user => {
+                        let userRevenue = Math.abs(Number(user.revenue));
+                        let investmentAmount = Math.abs(Number(expiredInvestment.amount));
+                        let interest = Math.abs(Number(expiredInvestment.interest));
+                        let currentRevenue = userRevenue + interest;
+                        Users.update({
+                                revenue: currentRevenue
+                            }, {
+                                where: {
+                                    id: {
+                                        [Op.eq]: expiredInvestment.user_id
+                                    }
+                                }
+                            })
+                            .then(updatedWallet => {
+                                Investments.destroy({
+                                        where: {
+                                            id: {
+                                                [Op.eq]: expiredInvestment.id
+                                            }
+                                        }
+                                    })
+                                    .then(inactiveInvestments => {
+                                        return null;
+                                    })
+                                    .catch(error => {
+                                        return null;
+                                    });
+                            })
+                            .catch(error => {
+                                return null;
+                            });
+                    })
+                    .catch(error => {
+                        return null;
+                    });
+            });
+        })
+        .catch(error => {
+            return null;
+        });
+    // }
+});
 
 // server
 const PORT = parameters.LOCAL_PORT || process.env.PORT;
